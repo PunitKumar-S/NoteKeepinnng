@@ -1,11 +1,12 @@
 const express = require('express');
 const homeRotuer = require('./routes/home.routes');
 const dotenv = require('dotenv');
-
 //
 const app = express();
 dotenv.config();
 app.set('view engine', 'ejs');
+
+//
 
 // middleware
 app.use(express.json());
