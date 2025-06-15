@@ -26,7 +26,7 @@ async (req, res)=>{
 
     const {username, email, password} = req.body;
 
-    const existingUser = userModel.findOne({email})
+    const existingUser = await userModel.findOne({email})
     if (existingUser){
         return res.status(409).json({
             message: "Email already in use"
@@ -41,8 +41,18 @@ async (req, res)=>{
         password: hashPassword,
     })
 
-    res.json(newUser);
+    //
+    res.json({
+        message: 'Account created successfully',
+        user: {
+            username: newUser.username,
+            email: newUser.email,
+        }
+    });
+
 })
+
+
 // login
 router.get('/login-account', (req, res)=>{
     res.render('login_account')
@@ -58,8 +68,10 @@ body('password').trim().isLength({min : 8}),async (req, res)=>{
         })
     }
 
+    // extract creds from req
     const {email, password} = req.body;
 
+    // get user
     const user = await userModel.findOne({
         email
     })
@@ -78,14 +90,22 @@ body('password').trim().isLength({min : 8}),async (req, res)=>{
         })
     }
 
+    // remember
+    const remember = req.body.remember; // 'on' if checked
+    const TOKEN_EXPIRATION = remember ? '30d' : '1h'; // might store this in .env
+
     // JWT
     const token = jwt.sign({
         userId: user._id,
         email: user.email,
         username: user.username,
-    },process.env.JWT_SECRET)
+    },process.env.JWT_SECRET, {expiresIn: TOKEN_EXPIRATION})
 
-    res.cookie('token', token);
+    res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV == "production", // idk
+        maxAge: remember ? 30 * 24 * 60 * 60 * 1000 : undefined, // 30 days or session only
+    });
     res.redirect('/home') // redirect the user to the home page
 })
 
