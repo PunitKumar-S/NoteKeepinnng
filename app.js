@@ -4,6 +4,7 @@ const userRouter = require('./routes/user.routes');
 
 const connectToDB = require('./config/db');
 const dotenv = require('dotenv');
+const cookieparser = require('cookie-parser');
 
 //
 const app = express();
@@ -20,10 +21,18 @@ app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
+app.use(cookieparser()); //
+
+// custom middleware
+
+
+// auth
+
 
 // routes
 app.use('/',homeRotuer);
 app.use('/user', userRouter);
+
 
 // runnig the server
 app.listen(process.env.PORT || 3000, ()=>{
