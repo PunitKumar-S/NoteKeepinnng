@@ -109,5 +109,5 @@ body('password').trim().isLength({min : 8}),async (req, res)=>{
     res.redirect('/home') // redirect the user to the home page
 })
 
-
+//
 module.exports = router;

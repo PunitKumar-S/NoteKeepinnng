@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>NoteKeeper</title>
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+
+        <style>
+            a{
+                width: inherit;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            p{
+                width: inherit;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        </style>
+
+    </head>
+
+    <body>
+        <main>
+            <form action="/home/add-note" method="post">
+                <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add Note</button>
+            </form>
+            <div class="notes">
+                <% if (notes && notes.length > 0) { %>
+                    <% notes.forEach(note => { %>
+                        <div class="note <%= note._id %> max-w-sm mx-auto bg-white shadow-md rounded-lg overflow-hidden border border-gray-200 mt-10">
+                            <a href="/home/note/<%= note._id %>"><%= note.title %></a>
+                            <p><%= note.content %></p>
+                            <form action="/home/delete-note/<%= note._id %>" method="post">
+                                <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">X</button>
+                            </form>
+                        </div>
+                        
+                    <% }) %>
+                <% } else { %>
+                    <p>No notes found.</p>
+                <% } %>
+            </div>
+        </main>
+    
+        <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    </body>
+</html>
